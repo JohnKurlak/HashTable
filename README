@@ -1,0 +1,5 @@
+I created this HashTable implementation in the Fall semester of my junior year of college.  It
+probably has way too many comments, and one day I hope to clean it up a bit.
+
+To compile:
+	javac HashTable.java
