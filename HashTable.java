@@ -30,7 +30,6 @@ public class HashTable<K, V>
 	 */
 	private static class HashEntry<K, V>
 	{
-		// Private variables
 		private K key;
 		private Vector<V> value = new Vector<V>();
 		private boolean isTombstone = false;
@@ -44,7 +43,6 @@ public class HashTable<K, V>
 		 */
 		private HashEntry(K insertKey, V insertValue)
 		{
-			// Store the key and value
 			key = insertKey;
 			value.add(insertValue);
 		}
@@ -58,7 +56,6 @@ public class HashTable<K, V>
 		}
 	}
 
-	// Private variables
 	private final int[] SIZES = { 1019, 2027, 4079, 8123, 16267, 32503, 65011,
 		130027, 260111, 520279, 1040387, 2080763, 4161539, 8323151, 16646323 };
 	private int sizeIdx = 0;
@@ -94,12 +91,10 @@ public class HashTable<K, V>
 		// We have too many entries in the hash table: no more sizes left
 		catch (ArrayIndexOutOfBoundsException e)
 		{
-			// Show an error message and exit
 			System.out.println("Too many entries in hash table.  Exiting.");
 			System.exit(4);
 		}
 
-		// Loop through all of the old entries
 		for (int i = 0; i < oldTable.length; ++i)
 		{
 			// If we are at an entry with a key and value
@@ -123,7 +118,6 @@ public class HashTable<K, V>
 	 */
 	public boolean insert(K key, V value)
 	{
-		// Declare variables
 		int size = SIZES[sizeIdx];
 		int i;
 		numProbes = 0;
@@ -145,7 +139,7 @@ public class HashTable<K, V>
 			// If the current slot doesn't contain a value
 			if (table[index] == null || table[index].isTombstone)
 			{
-				// Store the value at the current slot
+				// Store the given value at the current slot
 				table[index] = new HashEntry<K, V>(key, value);
 				++numEntries;
 				++numFilledSlots;
@@ -157,7 +151,7 @@ public class HashTable<K, V>
 			// are inserting with
 			else if (table[index].key.equals(key) && !table[index].isTombstone)
 			{
-				// Add this value to the current slot
+				// Add the given value to the current slot
 				table[index].value.add(value);
 				++numEntries;
 				numProbes = i;
@@ -169,8 +163,8 @@ public class HashTable<K, V>
 		// Compute the number of probes if probing failed
 		numProbes = i - 1;
 
-		// The value wasn't inserted: we couldn't find a place to insert the
-		// value
+		// The value wasn't inserted because we couldn't find a place to insert
+		// it
 		return false;
 	}
 
@@ -184,7 +178,7 @@ public class HashTable<K, V>
 	 */
 	private int probe(K key, int i, int size)
 	{
-		// Use quadratic probing with (i^2 + i) / 2
+		// Use quadratic probing of the form: (i^2 + i) / 2
 		return (hash(key) + ((int) (Math.pow(i, 2) + i) >> 2)) % size;
 	}
 
@@ -208,7 +202,6 @@ public class HashTable<K, V>
 	 */
 	public Vector<V> find(K key)
 	{
-		// Get the table size
 		int size = SIZES[sizeIdx];
 
 		// Probe no more iterations than the size of the table
@@ -244,7 +237,6 @@ public class HashTable<K, V>
 	 */
 	public boolean delete(K key)
 	{
-		// Get the table size
 		int size = SIZES[sizeIdx];
 
 		// Probe no more iterations than the size of the table
@@ -285,28 +277,23 @@ public class HashTable<K, V>
 	 */
 	private int hash(K key)
 	{
-		// Make the key value into a string
 		String toHash = key.toString();
 		int hashValue = 0;
 
-		// Loop through all of the letters in the string
 		for (int pos = 0; pos < toHash.length(); ++pos)
 		{
 			// Compute a hash value for the current letter
 			hashValue = (hashValue << 4) + toHash.charAt(pos);
 			int highBits = hashValue & 0xF0000000;
 
-			// Do some schnazzy bit twiddling
 			if (highBits != 0)
 			{
 				hashValue ^= highBits >> 24;
 			}
 
-			// Finish twiddling
 			hashValue &= ~highBits;
 		}
 
-		// Return the hashed key as an integer
 		return hashValue;
 	}
 
@@ -318,10 +305,8 @@ public class HashTable<K, V>
 	 */
 	public void debug()
 	{
-		// Declare variable
 		float entriesPerSlot = (float) numEntries / (float) numFilledSlots;
 
-		// Display some hash table statistics
 		String result = "Format of display is\n";
 		result += "Slot number: data record\n\n";
 		result += "Current table size:\t\t\t\t\t\t" + table.length + "\n";
@@ -330,13 +315,12 @@ public class HashTable<K, V>
 		result += "Average number of entries per slot is:\t" + entriesPerSlot + "\n";
 		System.out.println(result);
 
-		// Loop through all of the entries in the hash table
 		for (int i = 0; i < table.length; i++)
 		{
 			// If the current slot has a value in it
 			if (table[i] != null && !table[i].isTombstone)
 			{
-				// Store the the key that it stores
+				// Store the key that it stores
 				result = "\n" + i + ":\t" + ((i < 100) ? "\t" : "") + "[" + table[i].key.toString() + ", ";
 
 				// Loop through all of the entries at that key
@@ -346,7 +330,6 @@ public class HashTable<K, V>
 					result += "(" + entry.toString() + "), ";
 				}
 
-				// Finalize the string and output it to the log file
 				result = result.substring(0, result.length() - 2) + "]";
 				System.out.println(result);
 			}
